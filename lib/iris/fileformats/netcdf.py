@@ -485,7 +485,24 @@ def _load_cube(engine, cf, cf_var, filename):
     # transforms.
     dummy_data = np.zeros(1, dtype=cf_var.dtype)
     if hasattr(cf_var, 'scale_factor'):
+
+        print('\n---debug---\n')
+        if int(float(cf_var.scale_factor)) == float(cf_var.scale_factor):
+            cf_var.scale_factor = int(cf_var.scale_factor)
+        else:
+            cf_var.scale_factor = float(cf_var.scale_factor)
+        print("cf_var = {}\n".format(cf_var))
+        print("cf_var.dtype = {}\n".format(cf_var.dtype))
+        print("cf_var.scale_factor = {}\n".format(cf_var.scale_factor))
+#        print("cf_var.scale_factor.dtype = {}\n".format(cf_var.scale_factor.dtype))
+        print("dummy_data = {}\n".format(dummy_data))
+        print("dummy_data.dtype = {}\n".format(dummy_data.dtype))
+        print('\n---debug---\n')
+
         dummy_data = cf_var.scale_factor * dummy_data
+        print('\n---debug---\n')
+        print("dummy_data.dtype = {}\n".format(dummy_data.dtype))
+        print('\n---debug---\n')
     if hasattr(cf_var, 'add_offset'):
         dummy_data = cf_var.add_offset + dummy_data
 
