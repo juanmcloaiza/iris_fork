@@ -901,17 +901,31 @@ fc_extras
     import iris.exceptions
     import iris.std_names
     import iris.util
+
+    #
+    # Different ways of writing meters per sec:
+    #
+    METERS_PER_SECOND = ['meters per second','meter per second',
+                         'meter_per_second', 'meters_per_second', 
+                         'm/s','m / s']
     
+    #
+    # Different ways of writing celcius degrees:
+    #
+    CELCIUS = ['celcius degrees', 'celcius degree','degree celcius', 
+               'degree c', 'c degree','celius deg', 'deg celcius',
+               'deg c', 'c deg', 'c_deg', 'deg_c'    ]
+
     
     #
     # UD Units Constants (based on Unidata udunits.dat definition file)
     #
     UD_UNITS_LAT = ['degrees_north', 'degree_north', 'degree_n', 'degrees_n',
                     'degreen', 'degreesn', 'degrees', 'degrees north',
-                    'degree north', 'degree n', 'degrees n']
+                    'degree north', 'degree n', 'degrees n', 'degree North']
     UD_UNITS_LON = ['degrees_east', 'degree_east', 'degree_e', 'degrees_e',
                     'degreee', 'degreese', 'degrees', 'degrees east',
-                    'degree east', 'degree e', 'degrees e']
+                    'degree east', 'degree e', 'degrees e', 'degree East']
     
     #
     # CF Dimensionless Vertical Coordinates
@@ -1197,19 +1211,42 @@ fc_extras
 
 
     ################################################################################
-    def get_attr_units(cf_var, attributes):
-        attr_units = getattr(cf_var, CF_ATTR_UNITS, cf_units._UNIT_DIMENSIONLESS)
+
+    #standardize different ways of writing units.
+    def sanitise_units(attr_units):
         if not attr_units:
             attr_units = '1'
+        else:
+            attr_units = attr_units.lower()
 
-        # Sanitise lat/lon units.
         if attr_units in UD_UNITS_LAT or attr_units in UD_UNITS_LON:
             attr_units = 'degrees'
 
+        if attr_units in METERS_PER_SECOND:
+            attr_units = 'meter per second' #'meter per second'
+        
+        if attr_units in CELCIUS:
+            attr_units = 'degree_celsius'
+        
+        return attr_units
+
+
+
+    def get_attr_units(cf_var, attributes):
+        attr_units = getattr(cf_var, CF_ATTR_UNITS, cf_units._UNIT_DIMENSIONLESS)
+        attr_units = sanitise_units(attr_units)
         # Graceful loading of invalid units.
         try:
             cf_units.as_unit(attr_units)
-        except ValueError:
+        except ValueError as e:
+            print('\n\nvv debug vv')
+            print(e)
+            print('It may be that you need to add a missing unit.')
+            print('Go to:')
+            print("pipistrello/lib/iris/fileformats/_pyke_rules/fc_rules_cf.krb")
+            print("There modify the function sanitise_units(...)")
+            print('^^ debug ^^\n\n')
+
         # Using converted unicode message. Can be reverted with Python 3.
             msg = u'Ignoring netCDF variable {!r} invalid units {!r}'.format(
                 cf_var.cf_name, attr_units)
@@ -1540,7 +1577,6 @@ fc_extras
 
         # Add it to the cube
         cube.add_cell_measure(cell_measure, data_dims)
-	
 
 
     ################################################################################
