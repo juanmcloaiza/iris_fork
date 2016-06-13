@@ -910,21 +910,53 @@ fc_extras
                          'm/s','m / s']
     
     #
-    # Different ways of writing celcius degrees:
+    # Different ways of writing celsius degrees:
     #
-    CELCIUS = ['celcius degrees', 'celcius degree','degree celcius', 
-               'degree c', 'c degree','celius deg', 'deg celcius',
-               'deg c', 'c deg', 'c_deg', 'deg_c'    ]
+    CELSIUS = [
+               'celsius degrees', 'celsius degree','degree celsius', 'degrees celsius', 
+               'celsius_degrees', 'celsius_degree','degree_celsius', 'degrees_celsius', 
+               'degree c', 'c degree','degrees c', 'c degrees',
+               'degree_c', 'c_degree','degrees_c', 'c_degrees',
+               'celsius deg', 'deg celsius',
+               'celsius_deg', 'deg_celsius',
+               'deg c', 'c deg', 
+               'c_deg', 'deg_c'    
+              ]
+
+    #
+    # Different ways of writing Kelvin
+    #
+    KELVIN = ['k', 'kelvin', 
+        #kelvin should not be 'degree', but people writes it some times...
+               'kelvin degrees', 'kelvin degree','degree kelvin', 'degrees kelvin', 
+               'kelvin_degrees', 'kelvin_degree','degree_kelvin', 'degrees_kelvin', 
+               'degree k', 'k degree','degrees k', 'k degrees',
+               'degree_k', 'k_degree','degrees_k', 'k_degrees',
+               'kelvin deg', 'deg kelvin',
+               'kelvin_deg', 'deg_kelvin',
+               'deg k', 'k deg', 
+               'k_deg', 'deg_k'
+             ]
 
     #
     # Different ways of writing hPa:
     #
     HECTOPASCAL = ['hpa','hectopascal']
-               
-              
+ 
+    #
+    # Different ways of writing w m-2:
+    #
+    WATT_PER_SQUARE_METRE = ['watt per meter2', 'w m-2']
+ 
+    #
+    # Different ways of writing hPa:
+    #
+    NEWTON_PER_SQUARE_METRE = ['newton per meter2','n m-2']
 
 
-    
+
+   ################## 
+   
     #
     # UD Units Constants (based on Unidata udunits.dat definition file)
     #
@@ -1233,11 +1265,22 @@ fc_extras
         if attr_units in METERS_PER_SECOND:
             attr_units = 'meter per second' #'meter per second'
         
-        if attr_units in CELCIUS:
+        if attr_units in CELSIUS:
             attr_units = 'degree_celsius'
+        
+        if attr_units in KELVIN:
+            attr_units = 'kelvin'
 
         if attr_units in HECTOPASCAL:
             attr_units = 'hectopascal'
+
+        if attr_units in WATT_PER_SQUARE_METRE:
+            attr_units = 'watt per meter2'
+ 
+        if attr_units in NEWTON_PER_SQUARE_METRE:
+            attr_units = 'newton per meter2'
+
+
         
         return attr_units
 
